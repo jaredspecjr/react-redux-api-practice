@@ -1,4 +1,4 @@
-import * as types from "./../constants/ActionTypes";
+import * as types from './../constants/ActionTypes';
 
 export const nextLyric = (currentSongId) => ({
   type: types.NEXT_LYRIC,
@@ -10,7 +10,7 @@ export const restartSong = (currentSongId) => ({
   currentSongId
 });
 
-export const changeSong = (currentSongId) => ({
+export const changeSong = (newSelectedSongId) => ({
   type: types.CHANGE_SONG,
-  currentSongId
+  newSelectedSongId
 });

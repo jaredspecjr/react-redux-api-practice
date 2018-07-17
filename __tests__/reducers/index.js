@@ -1,4 +1,4 @@
-import constants from "./../../src/constants";
+import constants from './../../src/constants';
 import songChangeReducer from './../../src/reducers/songChangeReducer';
 import lyricChangeReducer from './../../src/reducers/lyricChangeReducer';
 import rootReducer from './../../src/reducers/';
@@ -29,7 +29,7 @@ describe('Karaoke App', () => {
     });
 
     it('Should change selectedSong.', () => {
-      expect(songChangeReducer(initialState, { type: 'CHANGE_SONG', newSelectedSongId: 1 })).toEqual(1);
+      expect(songChangeReducer(initialState.currentSongId, actions.changeSong(2))).toEqual(2);
     });
   });
 

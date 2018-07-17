@@ -14,11 +14,7 @@ const SongList = ({ dispatch, songList }) => {
           if (song.arrayPosition > 0){
             dispatch(restartSong(songId));
           }
-          action = {
-            type: 'CHANGE_SONG',
-            newSelectedSongId: songId
-          };
-          dispatch(action);
+          dispatch(changeSong(songId));
         }}>
           {song.title} by {song.artist}</li>;
       })}

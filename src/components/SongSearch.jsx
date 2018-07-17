@@ -15,7 +15,7 @@ function SongSearch(){
         //...instead of these console.log()s....
         input.value = '';
       }}>
-        <input placeholder="Song Title" ref={node => {
+        <input placeholder='Song Title' ref={node => {
           input = node;
         }}></input>
         <button>Search</button>
