@@ -19,12 +19,19 @@ export const changeSong = (newSelectedSongId) => ({
 export function fetchSongId(title) {
   return function (dispatch) {
     const localsongId = v4();
+    dispatch(requestSong(title, localsongId));
     title = title.replace(' ', '_');
-    return fetch('http://api.musixmatch.com/ws/1.1/track.search?&q_track=' + title + '&page_size=1&s_track_rating=desc&apikey=YOUR-API-KEY-HERE').then(
-      response => response.jason(),
+    return fetch('http://api.musixmatch.com/ws/1.1/track.search?&q_track=' + title + '&apikey=a80eae707a336946ca9e69739725bf8e').then(
+      response => response.json(),
       error => console.log('An error has occured.', error)
     ).then(function(json) {
       console.log('check out the API response:', json);
     });
   };
 }
+
+export const requestSong = (title, localSongId) =>({
+  type: types.REQUEST_SONG,
+  title,
+  songId: localSongId
+});

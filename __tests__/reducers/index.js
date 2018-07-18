@@ -19,9 +19,19 @@ describe('Karaoke App', () => {
     });
 
     it('Should restart song', () => {
-      expect(lyricChangeReducer(initialState.songsById, actions.restartSong(1))[1].arrayPosition).toEqual(0);
+      expect(lyricChangeReducer(initialState.songsById,  actions.restartSong(1))[1].arrayPosition).toEqual(0);
+    });
+    it('should update state when API lyrics are being requested.', () => {
+      const action = actions.requestSong('crocodile rock');
+      const newStateEntry = {
+        isFetching: true,
+        title: action.title,
+        songId: action.songId,
+      };
+      expect(lyricChangeReducer(initialState.songsById, action)[action.songId]).toEqual(newStateEntry);
     });
   });
+
 
   describe('songChangeReducer', () => {
     it('Should accept and return initial state.', () => {
