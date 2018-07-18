@@ -18,14 +18,21 @@ export const changeSong = (newSelectedSongId) => ({
 
 export function fetchSongId(title) {
   return function (dispatch) {
-    const localsongId = v4();
-    dispatch(requestSong(title, localsongId));
+    const localSongId = v4();
+    dispatch(requestSong(title, localSongId));
     title = title.replace(' ', '_');
-    return fetch('http://api.musixmatch.com/ws/1.1/track.search?&q_track=' + title + '&apikey=a80eae707a336946ca9e69739725bf8e').then(
+    return fetch('http://api.musixmatch.com/ws/1.1/track.search?&q_track=' + title + '&page_size=1&s_track_rating=desc&apikey=a80eae707a336946ca9e69739725bf8e').then(
       response => response.json(),
       error => console.log('An error has occured.', error)
     ).then(function(json) {
-      console.log('check out the API response:', json);
+      if(json.message.body.track_list.length > 0) {
+        const musicMatchId = json.message.body.track_list[0].track.track_id;
+        const artist = json.message.body.track_list[0].track.artist_name;
+        const title = json.message.body.track_list[0].track.track_name;
+        fetchLyrics(title, artist, musicMatchId, localSongId, dispatch);
+      } else {
+        console.log('we couldn\'t locate that song yo');
+      }
     });
   };
 }
@@ -34,4 +41,30 @@ export const requestSong = (title, localSongId) =>({
   type: types.REQUEST_SONG,
   title,
   songId: localSongId
+});
+
+export function fetchLyrics(title, artist, musicMatchId, localSongId, dispatch) {
+  return fetch('http://api.musixmatch.com/ws/1.1/track.lyrics.get?track_id=' + musicMatchId + '&apikey=a80eae707a336946ca9e69739725bf8e').then(
+    response => response.json(),
+    error => console.log('an error occured', error)
+  ).then(function(json){
+    if (json.message.body.lyrics) {
+      let lyrics = json.message.body.lyrics.lyrics_body;
+      lyrics = lyrics.replace('"', '');
+      const songArray = lyrics.split(/\n/g).filter(entry => entry!="");
+      dispatch(receiveSong(title, artist, localSongId, songArray));
+      dispatch(changeSong(localSongId));
+    } else {
+      console.log('we couldn\'t locate lyrics for this song!');
+    }
+  });
+}
+
+export const receiveSong = (title, artist, songId, songArray) => ({
+  type: types.RECEIVE_SONG,
+  songId,
+  title,
+  artist,
+  songArray,
+  receivedAt: Date.now()
 });
